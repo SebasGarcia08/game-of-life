@@ -1,4 +1,4 @@
-#configButton {
-	-fx-background-radius: 10.0em;
+#configBtn {
+	-fx-background-radius: 3.0em 3.0em 0.0em 0.0em;
     -fx-background-color: #ffffff;
 }

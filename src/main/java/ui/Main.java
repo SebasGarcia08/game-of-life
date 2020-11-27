@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
-	
+
 	Parent root;
 	double xOffset, yOffset;
 
@@ -48,5 +48,5 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-	}	
+	}
 }
