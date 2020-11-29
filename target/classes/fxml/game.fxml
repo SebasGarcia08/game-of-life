@@ -1,20 +1,221 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="993.0" stylesheets="@../css/gameStyles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="1000.0" stylesheets="@../css/gameStyles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Game">
    <children>
       <Canvas fx:id="canvas" height="500.0" width="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <JFXButton fx:id="configButton" buttonType="RAISED" layoutX="476.0" layoutY="471.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Button" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="476.0" AnchorPane.rightAnchor="468.0">
+      <StackPane fx:id="configContainer" layoutY="362.0" maxWidth="1.7976931348623157E308" prefHeight="148.0" AnchorPane.bottomAnchor="-9.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <AnchorPane fx:id="configPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" StackPane.alignment="BOTTOM_CENTER">
+               <children>
+                  <VBox layoutX="1.0" prefHeight="148.0" prefWidth="1000.0">
+                     <children>
+                        <HBox prefHeight="148.0" prefWidth="632.0">
+                           <children>
+                              <GridPane prefHeight="154.0" prefWidth="1000.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="102.0" minHeight="10.0" prefHeight="96.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="35.0" prefWidth="632.0">
+                                       <children>
+                                          <GridPane prefHeight="96.0" prefWidth="1010.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="365.0" minWidth="10.0" prefWidth="357.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="444.0" minWidth="10.0" prefWidth="260.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="425.0" minWidth="10.0" prefWidth="378.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <VBox alignment="CENTER" GridPane.columnIndex="1">
+                                                   <children>
+                                                      <Pane id="titleBackground" prefHeight="75.0" prefWidth="275.0" style="-fx-background-color: #ffffff;">
+                                                         <children>
+                                                            <ImageView fitHeight="171.0" fitWidth="249.0" layoutX="13.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../imgs/logo.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </children>
+                                                      </Pane>
+                                                   </children>
+                                                </VBox>
+                                                <HBox prefHeight="100.0" prefWidth="200.0">
+                                                   <children>
+                                                      <JFXButton buttonType="RAISED" contentDisplay="CENTER" onAction="#maximizeWindow" styleClass="rounded-btn">
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="ARROWS_ALT" size="20" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                      <JFXButton buttonType="RAISED" contentDisplay="CENTER" onAction="#minimizeWindow" styleClass="rounded-btn">
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="ARROW_DOWN" size="20" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                         <HBox.margin>
+                                                            <Insets left="5.0" />
+                                                         </HBox.margin>
+                                                      </JFXButton>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="10.0" top="10.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
+                                                   <children>
+                                                      <JFXButton buttonType="RAISED" contentDisplay="CENTER" onAction="#exit" styleClass="rounded-btn">
+                                                         <HBox.margin>
+                                                            <Insets right="10.0" top="10.0" />
+                                                         </HBox.margin>
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="TIMES" size="20" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="108.0" prefWidth="632.0" GridPane.rowIndex="1">
+                                       <children>
+                                          <GridPane prefHeight="75.0" prefWidth="1000.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="74.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="81.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="68.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="10.0" prefWidth="244.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="190.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="184.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="55.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <VBox alignment="CENTER">
+                                                   <children>
+                                                      <Text fx:id="chronometer" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00:00" />
+                                                   </children>
+                                                </VBox>
+                                                <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnIndex="4">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed:" />
+                                                      <JFXSlider fx:id="speedSlider" nodeOrientation="LEFT_TO_RIGHT" styleClass="controlIcon" />
+                                                   </children>
+                                                </HBox>
+                                                <VBox GridPane.columnIndex="5">
+                                                   <children>
+                                                      <JFXToggleButton fx:id="minimumPath" prefHeight="0.0" prefWidth="166.0" text="Minimum path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
+                                                   </children>
+                                                </VBox>
+                                                <HBox alignment="CENTER" prefHeight="52.0" prefWidth="258.0" GridPane.columnIndex="6">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Generations: " wrappingWidth="87.80712890625" />
+                                                      <Text fx:id="numGenerations" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.27099609375" />
+                                                   </children>
+                                                </HBox>
+                                                <VBox alignment="CENTER" GridPane.columnIndex="1">
+                                                   <children>
+                                                      <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#play">
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="PLAY" size="45" styleClass="controlIcon" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" GridPane.columnIndex="2">
+                                                   <children>
+                                                      <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#reset">
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="REPEAT" size="45" styleClass="controlIcon" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" GridPane.columnIndex="3">
+                                                   <children>
+                                                      <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#step" text="Button">
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="FORWARD" size="45" styleClass="controlIcon" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" prefHeight="52.0" prefWidth="49.0" GridPane.columnIndex="7">
+                                                   <children>
+                                                      <JFXButton fx:id="hideBtn" buttonType="RAISED" contentDisplay="CENTER" onAction="#hideConfigPane" prefHeight="35.0" prefWidth="31.0" style="-fx-background-color: #ffffff;" styleClass="btn">
+                                                         <graphic>
+                                                            <FontAwesomeIconView glyphName="ANGLE_DOUBLE_DOWN" size="30" />
+                                                         </graphic>
+                                                         <font>
+                                                            <Font size="1.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children></StackPane>
+      <JFXButton fx:id="showBtn" buttonType="RAISED" layoutX="452.0" layoutY="471.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#showConfigPane" styleClass="btn" text="Button" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="452.0" AnchorPane.rightAnchor="492.0">
          <graphic>
             <FontAwesomeIconView glyphName="ANGLE_DOUBLE_UP" size="30" wrappingWidth="13.0" />
          </graphic>
          <font>
             <Font size="1.0" />
-         </font></JFXButton>
+         </font>
+      </JFXButton>
    </children>
 </AnchorPane>
