@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -13,11 +12,9 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -29,53 +26,36 @@ public class Game implements Initializable {
 	private Canvas canvas;
 
 	@FXML
-	private JFXButton configBtn;
+	private JFXButton showBtn;
 
-	private Pane configs;
+	@FXML
+	private JFXButton hideBtn;
+
+	@FXML
+	private AnchorPane configPane;
 
 	@FXML
 	private StackPane configContainer;
 
 	public Game() {
-		try {
-			configs = (Pane) FXMLLoader.load(getClass().getResource("/fxml/options.fxml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		configContainer.getChildren().add(configs);
 		configContainer.setVisible(false);
-		
-		slide(configs, 100, 0, 0.5, ef -> configs.setVisible(false));
-				
-		canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> System.out.println("Canvas pressed"));
-		
-		configBtn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-			configBtn.setVisible(false);
-			Scene scene = configBtn.getScene();
-			System.out.println("ON");
-			configContainer.setVisible(true);
-			
-			int newY = (int) scene.getHeight() / 4;
-			configs.setVisible(true);
-			slide(configs, 0, newY, 0.5, ef -> {
-				configBtn.setLayoutY(scene.getHeight() - newY);
-				configBtn.setVisible(true);
-			});
-		});
+	}
 
-		configs.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
-			Scene scene = configBtn.getScene();
-			System.out.println("OFF");
-			configContainer.setVisible(false);
-			slide(configs, scene.getHeight() / 4, 0, 0.5, ef -> configs.setVisible(false));
-			configBtn.setLayoutY(scene.getHeight());
-		});
+	@FXML
+	public void showConfigPane(ActionEvent event) {
+		showBtn.setVisible(false);
+		configContainer.setVisible(true);
+	}
 
+	@FXML
+	public void hideConfigPane(ActionEvent event) {
+		configContainer.setVisible(false);
+		showBtn.setVisible(true);
 	}
 
 	@FXML
@@ -99,15 +79,30 @@ public class Game implements Initializable {
 		System.exit(0);
 	}
 
-	private void slide(Pane root, double yPropertyValue, double endValue, double durationSecs,
+	public void slide(Pane root, double yPropertyValue, double endValue, double durationSecs,
 			EventHandler<ActionEvent> e) {
 		root.translateYProperty().set(yPropertyValue);
 		Timeline timeline = new Timeline();
-		KeyValue kv1 = new KeyValue(root.translateYProperty(), endValue, Interpolator.EASE_IN);
+		KeyValue kv1 = new KeyValue(root.translateYProperty(), endValue, Interpolator.EASE_BOTH);
 		KeyFrame kf2 = new KeyFrame(Duration.seconds(durationSecs), kv1);
 		timeline.getKeyFrames().add(kf2);
 		if (e != null)
 			timeline.setOnFinished(e);
 		timeline.play();
+	}
+
+	@FXML
+	void step(ActionEvent event) {
+
+	}
+
+	@FXML
+	void reset(ActionEvent event) {
+
+	}
+
+	@FXML
+	void play(ActionEvent event) {
+
 	}
 }
