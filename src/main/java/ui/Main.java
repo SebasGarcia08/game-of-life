@@ -33,6 +33,8 @@ public class Main extends Application {
 					yOffset = event.getSceneY();
 				}
 			});
+			
+		
 			root.setOnMouseDragged(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
