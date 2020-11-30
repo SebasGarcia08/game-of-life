@@ -10,4 +10,6 @@ public interface Game {
 	
 	public boolean[][] getState();
 	
+	public boolean reset();
+	
 }

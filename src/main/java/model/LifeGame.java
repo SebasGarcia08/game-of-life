@@ -2,7 +2,7 @@ package model;
 
 import java.util.HashSet;
 
-public class LifeGame implements Game{
+public class LifeGame implements Game {
 
 	protected class Cell {
 
@@ -17,21 +17,20 @@ public class LifeGame implements Game{
 	}
 
 	private boolean[][] grid;
-	private HashSet<Cell> aliveCells;
 
 	public LifeGame(int x, int y) {
 		grid = new boolean[x][y];
 	}
-	
+
 	@Override
 	public boolean check(int i, int j) {
-		
+
 		try {
 			grid[i][j] = true;
-		}catch(IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException e) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -39,13 +38,13 @@ public class LifeGame implements Game{
 	public boolean uncheck(int i, int j) {
 		try {
 			grid[i][j] = false;
-		}catch(IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException e) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean[][] next() {
 
@@ -56,21 +55,26 @@ public class LifeGame implements Game{
 
 				int aliveNeighbours = aliveNeighbours(i, j);
 
-				// Rule #1: One dead cell with exactly 3 alive neighbour cells, revives
+				// Rule #1: Any dead cell with three live neighbours becomes a live cell.
 				if (grid[i][j] == false && aliveNeighbours == 3) {
 					newGrid[i][j] = true;
 
-					// Rule #2: One alive cell with less than 2 or more than 3 alive cells, dies
-				} else if (grid[i][j] == true && aliveNeighbours < 2 || aliveNeighbours > 3) {
+					// Rule #2: Any live cell with two or three live neighbours survives.
+				} else if (grid[i][j] == true && aliveNeighbours == 2 || aliveNeighbours == 3) {
+					newGrid[i][j] = true;
+
+					// Rule #3: All other live cells die in the next generation. Similarly, all
+					// other dead cells stay dead.
+				} else {
 					newGrid[i][j] = false;
 				}
 
 			}
 		}
-		
+
 		grid = newGrid;
-		
-		return grid; 
+
+		return grid;
 	}
 
 	public int aliveNeighbours(int i, int j) {
@@ -80,29 +84,43 @@ public class LifeGame implements Game{
 		int r = grid.length;
 		int c = grid[0].length;
 
-		if (grid[(i - 1) % r][(j) % c]) // North
+		if (grid[mod((i - 1), r)][j % c]) // North
 			counter++;
-		if (grid[(i + 1) % r][(j) % c]) // South
+		if (grid[mod((i + 1), r)][j % c]) // South
 			counter++;
-		if (grid[(i) % r][(j + 1) % c]) // East
+		if (grid[i % r][mod((j + 1), c)]) // East
 			counter++;
-		if (grid[(i) % r][(j - 1) % c]) // West
+		if (grid[i % r][mod((j - 1), c)]) // West
 			counter++;
-		if (grid[(i - 1) % r][(j + 1) % c]) // North-East
+		if (grid[mod((i - 1), r)][mod((j + 1), c)]) // North-East
 			counter++;
-		if (grid[(i - 1) % r][(j - 1) % c]) // North-West
+		if (grid[mod((i - 1), r)][mod((j - 1), c)]) // North-West
 			counter++;
-		if (grid[(i + 1) % r][(j + 1) % c]) // South-East
+		if (grid[mod((i + 1), r)][mod((j + 1), c)]) // South-East
 			counter++;
-		if (grid[(i + 1) % r][(j - 1) % c]) // South-West
+		if (grid[mod((i + 1), r)][mod((j - 1), c)]) // South-West
 			counter++;
 
 		return counter;
 	}
 
+	public int mod(int a, int b) {
+
+		int r = a % b;
+		if (r < 0)
+			r += b;
+		return r;
+	}
+
 	@Override
-	public boolean[][] getState(){
+	public boolean[][] getState() {
 		return grid;
+	}
+
+	@Override
+	public boolean reset() {
+		this.grid = new boolean[grid.length][grid[0].length];
+		return true;
 	}
 
 }
