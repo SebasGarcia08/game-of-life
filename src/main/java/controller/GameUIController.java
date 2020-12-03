@@ -71,7 +71,7 @@ public class GameUIController implements Initializable {
 	@FXML
 	private JFXToggleButton minimumPath;
 
-	public static final int SPEED_MIN = 500;
+	public static final int SPEED_MIN = 100;
 	public static final int SPEED_INC = 1000;
 
 	private GameManager gm;
