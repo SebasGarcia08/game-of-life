@@ -12,6 +12,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -83,9 +84,11 @@ public class GameUIController implements Initializable {
 	long time1;
 	long time2;
 	private int speed;
-
-	public static final double GRID_LINE_SIZE = 1;
+	boolean initScrollPane = false;
 	
+	
+	public static final double GRID_LINE_SIZE = 1;
+
 	private ArrayList<Cell> pathCells;
 
 	public GameUIController() {
@@ -112,12 +115,15 @@ public class GameUIController implements Initializable {
 
 	@FXML
 	void minimunPathActivated(ActionEvent event) {
-		if(!minimumPath.isSelected()) {
-			
-			for(Cell cell : pathCells) {
-				
+
+		System.out.println("TEST");
+
+		if (!minimumPath.isSelected()) {
+
+			for (Cell cell : pathCells) {
+
 				Color color;
-				
+
 				if (grid[cell.getI()][cell.getJ()] == false) {
 					color = new Color(47 / 255.0, 48 / 255.0, 48 / 255.0, 1.0);
 				} else {
@@ -126,18 +132,19 @@ public class GameUIController implements Initializable {
 
 				paintCell(cell.getI(), cell.getJ(), gc, BOX_WIDTHS[currentBoxWidth], color);
 			}
-			
+
 			pathCells = new ArrayList<Cell>();
-			
+
 //			Color minPointsColor = new Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0);
-			
+
 		}
 	}
-	
+
 	public void paintCell(int i, int j, GraphicsContext gc, double boxWidth, Color color) {
-			
+
 		gc.setFill(color);
-		gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE);
+		gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE,
+				boxWidth - GRID_LINE_SIZE);
 	}
 
 	public void updateSpeed() {
@@ -305,28 +312,41 @@ public class GameUIController implements Initializable {
 	}
 
 	public void drawCanvas(GraphicsContext gc, boolean[][] array, double boxWidth) {
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+				gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+				gc.getCanvas().setWidth(array.length * boxWidth);
+				gc.getCanvas().setHeight(array[0].length * boxWidth);
 
-		gc.getCanvas().setWidth(array.length * boxWidth);
-		gc.getCanvas().setHeight(array[0].length * boxWidth);
+				Color customGray = new Color(47 / 255.0, 48 / 255.0, 48 / 255.0, 1.0);
+				drawBoxes(gc, array, boxWidth, customGray, Color.WHITE);
 
-		Color customGray = new Color(47 / 255.0, 48 / 255.0, 48 / 255.0, 1.0);
-		drawBoxes(gc, array, boxWidth, customGray, Color.WHITE);
+				Color minPointsColor = new Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0);
+				drawMinimunPathPoints(gc, boxWidth, minPointsColor);
 
-		Color minPointsColor = new Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0);
-		drawMinimunPathPoints(gc, boxWidth, minPointsColor);
-
-		drawGrid(gc, array.length, array[0].length, boxWidth, Color.WHITE);
-
+				drawGrid(gc, array.length, array[0].length, boxWidth, Color.WHITE);
+				
+				if(!initScrollPane) {
+					scrollPane.setVvalue(0.5);
+					scrollPane.setHvalue(0.5);
+					initScrollPane = true;
+				}
+				
+			}
+		});
+		
 	}
 
-	public void drawMinimunPathPoints(GraphicsContext gc,double boxWidth, Color pathColor){
+	public void drawMinimunPathPoints(GraphicsContext gc, double boxWidth, Color pathColor) {
 
 		if (minimumPath.isSelected()) {
 
 			for (Cell cell : pathCells) {
-				
+
 				gc.setFill(pathColor);
 				gc.fillRect(cell.getI() * boxWidth, cell.getJ() * boxWidth, boxWidth, boxWidth);
 
@@ -359,7 +379,7 @@ public class GameUIController implements Initializable {
 
 			@Override
 			public void handle(MouseEvent event) {
-				
+
 				if (!clickCooldownActive) {
 
 					if (event.getButton() == MouseButton.SECONDARY && minimumPath.isSelected()) {
