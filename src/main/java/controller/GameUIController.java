@@ -86,6 +86,8 @@ public class GameUIController implements Initializable {
 	private int speed;
 	boolean initScrollPane = false;
 	
+	private double vValue;
+	private double hValue;
 	
 	public static final double GRID_LINE_SIZE = 1;
 
@@ -95,6 +97,9 @@ public class GameUIController implements Initializable {
 		gm = new GameManager();
 		grid = gm.getState();
 		pathCells = new ArrayList<Cell>();
+		
+		vValue = 0.5;
+		hValue = 0.5;
 	}
 
 	@Override
@@ -330,11 +335,9 @@ public class GameUIController implements Initializable {
 
 				drawGrid(gc, array.length, array[0].length, boxWidth, Color.WHITE);
 				
-				if(!initScrollPane) {
-					scrollPane.setVvalue(0.5);
-					scrollPane.setHvalue(0.5);
-					initScrollPane = true;
-				}
+				
+				scrollPane.setVvalue(vValue);
+				scrollPane.setHvalue(hValue);
 				
 			}
 		});
@@ -439,7 +442,10 @@ public class GameUIController implements Initializable {
 				}
 
 				if (clickCooldownActive && event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-
+					
+					vValue = scrollPane.getVvalue();
+					hValue = scrollPane.getHvalue();
+					
 					new Thread() {
 						public void run() {
 							try {
