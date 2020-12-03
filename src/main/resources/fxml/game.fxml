@@ -144,7 +144,7 @@
                                                 </HBox>
                                                 <VBox GridPane.columnIndex="5">
                                                    <children>
-                                                      <JFXToggleButton fx:id="minimumPath" prefHeight="0.0" prefWidth="166.0" text="Minimum path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
+                                                      <JFXToggleButton fx:id="minimumPath" onAction="#minimunPathActivated" prefHeight="0.0" prefWidth="166.0" text="Minimum path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
                                                    </children>
                                                 </VBox>
                                                 <HBox alignment="CENTER" prefHeight="52.0" prefWidth="258.0" GridPane.columnIndex="6">

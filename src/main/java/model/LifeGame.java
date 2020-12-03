@@ -4,18 +4,6 @@ import java.util.HashSet;
 
 public class LifeGame implements Game {
 
-	protected class Cell {
-
-		int i;
-		int j;
-
-		public Cell(int i, int j) {
-			this.i = i;
-			this.j = j;
-		}
-
-	}
-
 	private boolean[][] grid;
 
 	public LifeGame(int x, int y) {

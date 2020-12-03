@@ -1,9 +1,12 @@
 package controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
+
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -19,6 +22,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -28,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.Cell;
 import model.GameManager;
 
 public class GameUIController implements Initializable {
@@ -62,6 +67,9 @@ public class GameUIController implements Initializable {
 	@FXML
 	private Text numGenerations;
 
+	@FXML
+	private JFXToggleButton minimumPath;
+
 	public static final int SPEED_MIN = 500;
 	public static final int SPEED_INC = 1000;
 
@@ -74,12 +82,16 @@ public class GameUIController implements Initializable {
 	boolean playStatus = false;
 	long time1;
 	long time2;
-
 	private int speed;
+
+	public static final double GRID_LINE_SIZE = 1;
+	
+	private ArrayList<Cell> pathCells;
 
 	public GameUIController() {
 		gm = new GameManager();
 		grid = gm.getState();
+		pathCells = new ArrayList<Cell>();
 	}
 
 	@Override
@@ -96,6 +108,36 @@ public class GameUIController implements Initializable {
 		gc = canvas.getGraphicsContext2D();
 		drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
 
+	}
+
+	@FXML
+	void minimunPathActivated(ActionEvent event) {
+		if(!minimumPath.isSelected()) {
+			
+			for(Cell cell : pathCells) {
+				
+				Color color;
+				
+				if (grid[cell.getI()][cell.getJ()] == false) {
+					color = new Color(47 / 255.0, 48 / 255.0, 48 / 255.0, 1.0);
+				} else {
+					color = Color.WHITE;
+				}
+
+				paintCell(cell.getI(), cell.getJ(), gc, BOX_WIDTHS[currentBoxWidth], color);
+			}
+			
+			pathCells = new ArrayList<Cell>();
+			
+//			Color minPointsColor = new Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0);
+			
+		}
+	}
+	
+	public void paintCell(int i, int j, GraphicsContext gc, double boxWidth, Color color) {
+			
+		gc.setFill(color);
+		gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE);
 	}
 
 	public void updateSpeed() {
@@ -161,10 +203,10 @@ public class GameUIController implements Initializable {
 	void reset(ActionEvent event) {
 		gm.reset();
 		grid = gm.getState();
-		
+
 		numGenerations.setText(gm.getGeneration() + "");
 		chronometer.setText(gm.getChronometer());
-		
+
 		drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
 	}
 
@@ -252,12 +294,12 @@ public class GameUIController implements Initializable {
 		gc.setFill(color);
 		for (int x = 0; x <= xBoxes; x++) {
 
-			gc.fillRect(x * boxWidth, 0, 1, gc.getCanvas().getHeight());
+			gc.fillRect(x * boxWidth, 0, GRID_LINE_SIZE, gc.getCanvas().getHeight());
 
 		}
 
 		for (int y = 0; y <= yBoxes; y++) {
-			gc.fillRect(0, y * boxWidth, gc.getCanvas().getWidth(), 1);
+			gc.fillRect(0, y * boxWidth, gc.getCanvas().getWidth(), GRID_LINE_SIZE);
 		}
 
 	}
@@ -265,15 +307,31 @@ public class GameUIController implements Initializable {
 	public void drawCanvas(GraphicsContext gc, boolean[][] array, double boxWidth) {
 
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		
+
 		gc.getCanvas().setWidth(array.length * boxWidth);
 		gc.getCanvas().setHeight(array[0].length * boxWidth);
 
 		Color customGray = new Color(47 / 255.0, 48 / 255.0, 48 / 255.0, 1.0);
 		drawBoxes(gc, array, boxWidth, customGray, Color.WHITE);
 
+		Color minPointsColor = new Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0);
+		drawMinimunPathPoints(gc, boxWidth, minPointsColor);
+
 		drawGrid(gc, array.length, array[0].length, boxWidth, Color.WHITE);
 
+	}
+
+	public void drawMinimunPathPoints(GraphicsContext gc,double boxWidth, Color pathColor){
+
+		if (minimumPath.isSelected()) {
+
+			for (Cell cell : pathCells) {
+				
+				gc.setFill(pathColor);
+				gc.fillRect(cell.getI() * boxWidth, cell.getJ() * boxWidth, boxWidth, boxWidth);
+
+			}
+		}
 	}
 
 	public void drawBoxes(GraphicsContext gc, boolean[][] array, double boxWidth, Color defaultColor,
@@ -301,17 +359,45 @@ public class GameUIController implements Initializable {
 
 			@Override
 			public void handle(MouseEvent event) {
-
+				
 				if (!clickCooldownActive) {
-					int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
-					int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
 
-					grid[x][y] = grid[x][y] == true ? false : true;
+					if (event.getButton() == MouseButton.SECONDARY && minimumPath.isSelected()) {
 
-					if (grid[x][y] == true) {
-						gm.check(x, y);
+						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
+						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
+
+						boolean found = false;
+
+						for (int i = 0; i < pathCells.size(); i++) {
+
+							Cell curr = pathCells.get(i);
+
+							if (curr.getI() == x && curr.getJ() == y) {
+								pathCells.remove(i);
+								found = true;
+								break;
+							}
+						}
+
+						if (!found && pathCells.size() < 2) {
+							pathCells.add(new Cell(x, y, true));
+
+						}
+
 					} else {
-						gm.uncheck(x, y);
+
+						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
+						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
+
+						grid[x][y] = grid[x][y] == true ? false : true;
+
+						if (grid[x][y] == true) {
+							gm.check(x, y);
+						} else {
+							gm.uncheck(x, y);
+						}
+
 					}
 
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
