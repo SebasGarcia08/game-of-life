@@ -439,12 +439,29 @@ public class GameUIController implements Initializable {
 
 				if (event.getEventType() == MouseEvent.DRAG_DETECTED) {
 					clickCooldownActive = true;
+					
+					new Thread() {
+						public void run() {
+							
+							while(clickCooldownActive) {
+								
+								hValue = scrollPane.getHvalue();
+								vValue = scrollPane.getVvalue();
+								
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e) {
+
+									e.printStackTrace();
+								}
+							}
+							
+						}
+					}.start();
+					
 				}
 
 				if (clickCooldownActive && event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-					
-					vValue = scrollPane.getVvalue();
-					hValue = scrollPane.getHvalue();
 					
 					new Thread() {
 						public void run() {
