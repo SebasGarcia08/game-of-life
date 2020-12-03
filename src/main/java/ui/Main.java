@@ -30,9 +30,11 @@ public class Main extends Application {
 				yOffset = event.getSceneY();
 			});
 			
+
 			root.setOnMouseDragged((event) -> {
 				primaryStage.setX(event.getScreenX() - xOffset);
 				primaryStage.setY(event.getScreenY() - yOffset);
+
 			});
 
 		} catch (Exception e) {

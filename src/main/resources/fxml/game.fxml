@@ -6,6 +6,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,9 +20,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="1000.0" stylesheets="@../css/gameStyles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Game">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="1000.0" stylesheets="@../css/gameStyles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameUIController">
    <children>
-      <Canvas fx:id="canvas" height="500.0" width="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <ScrollPane fx:id="scrollPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <Canvas fx:id="canvas" height="500.0" width="1000.0" />
+         </content>
+      </ScrollPane>
       <StackPane fx:id="configContainer" layoutY="362.0" maxWidth="1.7976931348623157E308" prefHeight="148.0" AnchorPane.bottomAnchor="-9.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <AnchorPane fx:id="configPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" StackPane.alignment="BOTTOM_CENTER">
@@ -128,7 +133,7 @@
                                              <children>
                                                 <VBox alignment="CENTER">
                                                    <children>
-                                                      <Text fx:id="chronometer" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00:00" />
+                                                      <Text fx:id="chronometer" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" />
                                                    </children>
                                                 </VBox>
                                                 <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnIndex="4">
@@ -139,7 +144,7 @@
                                                 </HBox>
                                                 <VBox GridPane.columnIndex="5">
                                                    <children>
-                                                      <JFXToggleButton fx:id="minimumPath" prefHeight="0.0" prefWidth="166.0" text="Minimum path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
+                                                      <JFXToggleButton fx:id="minimumPath" onAction="#minimunPathActivated" prefHeight="0.0" prefWidth="166.0" text="Minimum path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
                                                    </children>
                                                 </VBox>
                                                 <HBox alignment="CENTER" prefHeight="52.0" prefWidth="258.0" GridPane.columnIndex="6">
@@ -152,7 +157,7 @@
                                                    <children>
                                                       <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#play">
                                                          <graphic>
-                                                            <FontAwesomeIconView glyphName="PLAY" size="45" styleClass="controlIcon" />
+                                                            <FontAwesomeIconView fx:id="PlayButton" glyphName="PLAY" size="45" styleClass="controlIcon" />
                                                          </graphic>
                                                          <font>
                                                             <Font size="1.0" />
