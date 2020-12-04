@@ -149,9 +149,17 @@ public class GameUIController implements Initializable {
 
 	public void paintCell(int i, int j, GraphicsContext gc, double boxWidth, Color color) {
 
-		gc.setFill(color);
-		gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE,
-				boxWidth - GRID_LINE_SIZE);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+
+				gc.setFill(color);
+				gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE,
+						boxWidth - GRID_LINE_SIZE);
+
+			}
+		});
+
 	}
 
 	public void updateSpeed() {
@@ -432,7 +440,14 @@ public class GameUIController implements Initializable {
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
 
 					if (pathCells.size() == 2) {
-						shortestPath(pathCells.get(0), pathCells.get(1));
+						
+						new Thread() {
+							public void run() {
+								shortestPath(pathCells.get(0), pathCells.get(1));
+							}
+							
+						}.start();
+												
 					}
 
 				}
@@ -560,10 +575,11 @@ public class GameUIController implements Initializable {
 				return false;
 			else if (grid[i][j]) // Obstacle found
 				return false;
-			
-			System.out.println(Arrays.toString(moves));
+
+			System.out.println(i + " " + j);
 			Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
-			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);				
+			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
+			
 		}
 		return true;
 	}
@@ -588,6 +604,7 @@ public class GameUIController implements Initializable {
 	}
 
 	public void shortestPath(Cell start, Cell end) {
+
 		Queue<String> queue = new LinkedList<>();
 		queue.add("");
 		String add = "";
