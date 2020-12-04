@@ -441,7 +441,7 @@ public class GameUIController implements Initializable {
 
 						new Thread() {
 							public void run() {
-								//shortestPath(pathCells.get(0), pathCells.get(1));
+								// shortestPath(pathCells.get(0), pathCells.get(1));
 								BFS(pathCells.get(0), pathCells.get(1));
 							}
 
@@ -560,8 +560,7 @@ public class GameUIController implements Initializable {
 	public void BFS(Cell start, Cell end) {
 
 		Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
-		
-		
+
 		HashSet<Integer> visited = new HashSet<Integer>();
 		LinkedList<Cell> queue = new LinkedList<Cell>();
 
@@ -574,7 +573,7 @@ public class GameUIController implements Initializable {
 		boolean found = false;
 
 		while (queue.size() != 0 && !found) {
-			
+
 			Thread a = new Thread() {
 				public void run() {
 					try {
@@ -585,7 +584,7 @@ public class GameUIController implements Initializable {
 					}
 				}
 			};
-			
+
 			a.start();
 			try {
 				a.join();
@@ -593,16 +592,15 @@ public class GameUIController implements Initializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 			Cell cell = queue.poll();
 
 			Cell curr;
 			int i = cell.getI();
 			int j = cell.getJ();
-			
+
 			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
-			
+
 			// North
 			curr = new Cell(mod((i - 1), r), j % c, true);
 			int cellNum = gridNumber(curr.getI(), curr.getJ());
@@ -615,9 +613,7 @@ public class GameUIController implements Initializable {
 					break;
 				}
 			}
-			
-			
-			
+
 			// South
 			curr = new Cell(mod((i + 1), r), j % c, true);
 			cellNum = gridNumber(curr.getI(), curr.getJ());
@@ -631,8 +627,6 @@ public class GameUIController implements Initializable {
 				}
 			}
 
-			
-			
 			// East
 			curr = new Cell(i % r, mod((j + 1), c), true);
 			cellNum = gridNumber(curr.getI(), curr.getJ());
@@ -645,8 +639,7 @@ public class GameUIController implements Initializable {
 					break;
 				}
 			}
-			
-			
+
 			// West
 			curr = new Cell(i % r, mod((j - 1), c), true);
 			cellNum = gridNumber(curr.getI(), curr.getJ());
@@ -659,17 +652,15 @@ public class GameUIController implements Initializable {
 					break;
 				}
 			}
-			
-			
-			
+
 		}
 
 	}
-	
+
 	public boolean blocked(Cell cell) {
 		return grid[cell.getI()][cell.getJ()];
 	}
-	
+
 	public int mod(int a, int b) {
 
 		int r = a % b;
