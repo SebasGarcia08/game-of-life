@@ -2,6 +2,7 @@ package controller;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -390,8 +391,8 @@ public class GameUIController implements Initializable {
 						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
 						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
 
-						if(!grid[x][y]) {
-							
+						if (!grid[x][y]) {
+
 							boolean found = false;
 
 							for (int i = 0; i < pathCells.size(); i++) {
@@ -407,16 +408,16 @@ public class GameUIController implements Initializable {
 
 							if (!found && pathCells.size() < 2) {
 								pathCells.add(new Cell(x, y, true));
-								
+
 							}
 						}
-						
+
 					} else {
 
 						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
 						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
-						
-						if(!existPathPoint(x, y)) {
+
+						if (!existPathPoint(x, y)) {
 							grid[x][y] = grid[x][y] == true ? false : true;
 
 							if (grid[x][y] == true) {
@@ -425,38 +426,38 @@ public class GameUIController implements Initializable {
 								gm.uncheck(x, y);
 							}
 						}
-						
+
 					}
 
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
-					
-					if(pathCells.size() == 2) {
+
+					if (pathCells.size() == 2) {
 						shortestPath(pathCells.get(0), pathCells.get(1));
 					}
-					
+
 				}
 
 			}
 
 		});
 	}
-	
+
 	public boolean existPathPoint(int i, int j) {
-		
+
 		boolean found = false;
-		
-		for(int z=0; z<pathCells.size(); z++) {
-			
+
+		for (int z = 0; z < pathCells.size(); z++) {
+
 			Cell curr = pathCells.get(z);
-			if(curr.getI() == i && curr.getJ() == j) {
+			if (curr.getI() == i && curr.getJ() == j) {
 				found = true;
 				break;
 			}
-			
+
 		}
-		
+
 		return found;
-		
+
 	}
 
 	public void initSrollPaneDragEvent() {
@@ -557,11 +558,12 @@ public class GameUIController implements Initializable {
 				j += 1;
 			if (!(0 <= i && i < grid[0].length && 0 <= j && j < grid.length))
 				return false;
-			else if (grid[j][i]) // Obstacle found
+			else if (grid[i][j]) // Obstacle found
 				return false;
-
-			Color pathColor = new Color(249/250.0, 168/250.0, 37/250.0, 1.0);
-			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
+			
+			System.out.println(Arrays.toString(moves));
+			Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
+			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);				
 		}
 		return true;
 	}
@@ -571,7 +573,7 @@ public class GameUIController implements Initializable {
 		int j = start.getJ();
 
 		for (int idx = 0; idx < moves.length; idx++) {
-			char move = moves[i];
+			char move = moves[idx];
 			if (move == 'L')
 				i -= 1;
 			else if (move == 'R')
