@@ -148,9 +148,17 @@ public class GameUIController implements Initializable {
 
 	public void paintCell(int i, int j, GraphicsContext gc, double boxWidth, Color color) {
 
-		gc.setFill(color);
-		gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE,
-				boxWidth - GRID_LINE_SIZE);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+
+				gc.setFill(color);
+				gc.fillRect((i * boxWidth) + GRID_LINE_SIZE, (j * boxWidth) + GRID_LINE_SIZE, boxWidth - GRID_LINE_SIZE,
+						boxWidth - GRID_LINE_SIZE);
+
+			}
+		});
+
 	}
 
 	public void updateSpeed() {
@@ -390,8 +398,8 @@ public class GameUIController implements Initializable {
 						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
 						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
 
-						if(!grid[x][y]) {
-							
+						if (!grid[x][y]) {
+
 							boolean found = false;
 
 							for (int i = 0; i < pathCells.size(); i++) {
@@ -410,13 +418,13 @@ public class GameUIController implements Initializable {
 
 							}
 						}
-						
+
 					} else {
 
 						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
 						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
-						
-						if(!existPathPoint(x, y)) {
+
+						if (!existPathPoint(x, y)) {
 							grid[x][y] = grid[x][y] == true ? false : true;
 
 							if (grid[x][y] == true) {
@@ -425,33 +433,46 @@ public class GameUIController implements Initializable {
 								gm.uncheck(x, y);
 							}
 						}
-						
+
 					}
 
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
+
+					if (pathCells.size() == 2) {
+						
+						new Thread() {
+							public void run() {
+								shortestPath(pathCells.get(0), pathCells.get(1));
+							}
+							
+						}.start();
+						
+						
+					}
+
 				}
 
 			}
 
 		});
 	}
-	
+
 	public boolean existPathPoint(int i, int j) {
-		
+
 		boolean found = false;
-		
-		for(int z=0; z<pathCells.size(); z++) {
-			
+
+		for (int z = 0; z < pathCells.size(); z++) {
+
 			Cell curr = pathCells.get(z);
-			if(curr.getI() == i && curr.getJ() == j) {
+			if (curr.getI() == i && curr.getJ() == j) {
 				found = true;
 				break;
 			}
-			
+
 		}
-		
+
 		return found;
-		
+
 	}
 
 	public void initSrollPaneDragEvent() {
@@ -554,7 +575,10 @@ public class GameUIController implements Initializable {
 				return false;
 			else if (grid[j][i]) // Obstacle found
 				return false;
-			// paint here
+
+			System.out.println(i + " " + j);
+			Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
+			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
 		}
 		return true;
 	}
@@ -564,7 +588,7 @@ public class GameUIController implements Initializable {
 		int j = start.getJ();
 
 		for (int idx = 0; idx < moves.length; idx++) {
-			char move = moves[i];
+			char move = moves[idx];
 			if (move == 'L')
 				i -= 1;
 			else if (move == 'R')
@@ -579,6 +603,7 @@ public class GameUIController implements Initializable {
 	}
 
 	public void shortestPath(Cell start, Cell end) {
+
 		Queue<String> queue = new LinkedList<>();
 		queue.add("");
 		String add = "";
