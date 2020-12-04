@@ -2,7 +2,11 @@ package controller;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.ResourceBundle;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXToggleButton;
@@ -77,6 +81,7 @@ public class GameUIController implements Initializable {
 	private GameManager gm;
 	private int currentBoxWidth = 2;
 	public static final int[] BOX_WIDTHS = { 15, 20, 30, 40, 50 };
+	public static final char[] DIRECTIONS = { 'L', 'R', 'U', 'D' };
 	GraphicsContext gc;
 	boolean clickCooldownActive = false;
 	boolean[][] grid;
@@ -85,10 +90,10 @@ public class GameUIController implements Initializable {
 	long time2;
 	private int speed;
 	boolean initScrollPane = false;
-	
+
 	private double vValue;
 	private double hValue;
-	
+
 	public static final double GRID_LINE_SIZE = 1;
 
 	private ArrayList<Cell> pathCells;
@@ -97,7 +102,7 @@ public class GameUIController implements Initializable {
 		gm = new GameManager();
 		grid = gm.getState();
 		pathCells = new ArrayList<Cell>();
-		
+
 		vValue = 0.5;
 		hValue = 0.5;
 	}
@@ -317,11 +322,11 @@ public class GameUIController implements Initializable {
 	}
 
 	public void drawCanvas(GraphicsContext gc, boolean[][] array, double boxWidth) {
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				
+
 				gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 				gc.getCanvas().setWidth(array.length * boxWidth);
@@ -334,14 +339,13 @@ public class GameUIController implements Initializable {
 				drawMinimunPathPoints(gc, boxWidth, minPointsColor);
 
 				drawGrid(gc, array.length, array[0].length, boxWidth, Color.WHITE);
-				
-				
+
 				scrollPane.setVvalue(vValue);
 				scrollPane.setHvalue(hValue);
-				
+
 			}
 		});
-		
+
 	}
 
 	public void drawMinimunPathPoints(GraphicsContext gc, double boxWidth, Color pathColor) {
@@ -439,15 +443,15 @@ public class GameUIController implements Initializable {
 
 				if (event.getEventType() == MouseEvent.DRAG_DETECTED) {
 					clickCooldownActive = true;
-					
+
 					new Thread() {
 						public void run() {
-							
-							while(clickCooldownActive) {
-								
+
+							while (clickCooldownActive) {
+
 								hValue = scrollPane.getHvalue();
 								vValue = scrollPane.getVvalue();
-								
+
 								try {
 									Thread.sleep(10);
 								} catch (InterruptedException e) {
@@ -455,14 +459,14 @@ public class GameUIController implements Initializable {
 									e.printStackTrace();
 								}
 							}
-							
+
 						}
 					}.start();
-					
+
 				}
 
 				if (clickCooldownActive && event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-					
+
 					new Thread() {
 						public void run() {
 							try {
@@ -514,4 +518,59 @@ public class GameUIController implements Initializable {
 		});
 	}
 
+	public boolean isValid(char[] moves, Cell start) {
+		int i = start.getI();
+		int j = start.getJ();
+		for (int idx = 0; idx < moves.length; idx++) {
+			char move = moves[idx];
+			if (move == 'L')
+				i -= 1;
+			else if (move == 'R')
+				i += 1;
+			else if (move == 'U')
+				j -= 1;
+			else if (move == 'D')
+				j += 1;
+			if (!(0 <= i && i < grid[0].length && 0 <= j && j < grid.length))
+				return false;
+			else if (grid[j][i]) // Obstacle found
+				return false;
+			// paint here
+		}
+		return true;
+	}
+
+	public boolean findEnd(char[] moves, Cell start, Cell end) {
+		int i = start.getI();
+		int j = start.getJ();
+
+		for (int idx = 0; idx < moves.length; idx++) {
+			char move = moves[i];
+			if (move == 'L')
+				i -= 1;
+			else if (move == 'R')
+				i += 1;
+			else if (move == 'U')
+				j -= 1;
+			else if (move == 'D')
+				j += 1;
+		}
+
+		return i == end.getI() && j == end.getJ();
+	}
+
+	public void shortestPath(Cell start, Cell end) {
+		Queue<String> queue = new LinkedList<>();
+		queue.add("");
+		String add = "";
+		while (!findEnd(add.toCharArray(), start, end)) {
+			add = queue.poll();
+			for (int i = 0; i < DIRECTIONS.length; i++) {
+				String put = add + DIRECTIONS[i];
+				if (isValid(put.toCharArray(), start)) {
+					queue.add(put);
+				}
+			}
+		}
+	}
 }
