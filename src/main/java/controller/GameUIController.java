@@ -2,6 +2,7 @@ package controller;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -439,15 +440,15 @@ public class GameUIController implements Initializable {
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
 
 					if (pathCells.size() == 2) {
-						
+
 						new Thread() {
 							public void run() {
-								shortestPath(pathCells.get(0), pathCells.get(1));
+								//shortestPath(pathCells.get(0), pathCells.get(1));
+								BFS(pathCells.get(0), pathCells.get(1));
 							}
-							
+
 						}.start();
-						
-						
+
 					}
 
 				}
@@ -558,63 +559,131 @@ public class GameUIController implements Initializable {
 		});
 	}
 
-	public boolean isValid(char[] moves, Cell start) {
-		int i = start.getI();
-		int j = start.getJ();
-		for (int idx = 0; idx < moves.length; idx++) {
-			char move = moves[idx];
-			if (move == 'L')
-				i -= 1;
-			else if (move == 'R')
-				i += 1;
-			else if (move == 'U')
-				j -= 1;
-			else if (move == 'D')
-				j += 1;
-			if (!(0 <= i && i < grid[0].length && 0 <= j && j < grid.length))
-				return false;
-			else if (grid[j][i]) // Obstacle found
-				return false;
 
-			System.out.println(i + " " + j);
-			Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
+	public void BFS(Cell start, Cell end) {
+
+		Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
+		
+		
+		HashSet<Integer> visited = new HashSet<Integer>();
+		LinkedList<Cell> queue = new LinkedList<Cell>();
+
+		visited.add(gridNumber(start.getI(), start.getJ()));
+		queue.add(start);
+
+		int r = 200;
+		int c = 200;
+
+		boolean found = false;
+
+		while (queue.size() != 0 && !found) {
+			
+			Thread a = new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			
+			a.start();
+			try {
+				a.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			Cell cell = queue.poll();
+
+			Cell curr;
+			int i = cell.getI();
+			int j = cell.getJ();
+			
 			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
-		}
-		return true;
-	}
+			
+			// North
+			curr = new Cell(mod((i - 1), r), j % c, true);
+			int cellNum = gridNumber(curr.getI(), curr.getJ());
+			if (!visited.contains(cellNum) && !blocked(curr)) {
+				visited.add(cellNum);
+				queue.add(curr);
 
-	public boolean findEnd(char[] moves, Cell start, Cell end) {
-		int i = start.getI();
-		int j = start.getJ();
-
-		for (int idx = 0; idx < moves.length; idx++) {
-			char move = moves[idx];
-			if (move == 'L')
-				i -= 1;
-			else if (move == 'R')
-				i += 1;
-			else if (move == 'U')
-				j -= 1;
-			else if (move == 'D')
-				j += 1;
-		}
-
-		return i == end.getI() && j == end.getJ();
-	}
-
-	public void shortestPath(Cell start, Cell end) {
-
-		Queue<String> queue = new LinkedList<>();
-		queue.add("");
-		String add = "";
-		while (!findEnd(add.toCharArray(), start, end)) {
-			add = queue.poll();
-			for (int i = 0; i < DIRECTIONS.length; i++) {
-				String put = add + DIRECTIONS[i];
-				if (isValid(put.toCharArray(), start)) {
-					queue.add(put);
+				if (curr.getI() == end.getI() && curr.getJ() == end.getJ()) {
+					found = true;
+					break;
 				}
 			}
+			
+			
+			
+			// South
+			curr = new Cell(mod((i + 1), r), j % c, true);
+			cellNum = gridNumber(curr.getI(), curr.getJ());
+			if (!visited.contains(cellNum) && !blocked(curr)) {
+				visited.add(cellNum);
+				queue.add(curr);
+
+				if (curr.getI() == end.getI() && curr.getJ() == end.getJ()) {
+					found = true;
+					break;
+				}
+			}
+
+			
+			
+			// East
+			curr = new Cell(i % r, mod((j + 1), c), true);
+			cellNum = gridNumber(curr.getI(), curr.getJ());
+			if (!visited.contains(cellNum) && !blocked(curr)) {
+				visited.add(cellNum);
+				queue.add(curr);
+
+				if (curr.getI() == end.getI() && curr.getJ() == end.getJ()) {
+					found = true;
+					break;
+				}
+			}
+
+			
+			
+			// West
+			curr = new Cell(i % r, mod((j - 1), c), true);
+			cellNum = gridNumber(curr.getI(), curr.getJ());
+			if (!visited.contains(cellNum) && !blocked(curr)) {
+				visited.add(cellNum);
+				queue.add(curr);
+
+				if (curr.getI() == end.getI() && curr.getJ() == end.getJ()) {
+					found = true;
+					break;
+				}
+			}
+			
+			
+			
 		}
+
 	}
+	
+	public boolean blocked(Cell cell) {
+		return grid[cell.getI()][cell.getJ()];
+	}
+	
+	public int mod(int a, int b) {
+
+		int r = a % b;
+		if (r < 0)
+			r += b;
+		return r;
+	}
+
+	public int gridNumber(int i, int j) {
+		return i * 200 + j;
+	}
+
 }

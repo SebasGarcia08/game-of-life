@@ -1,5 +1,8 @@
 package model;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+
 public class GameManager {
 
 	private Game game;
@@ -52,5 +55,12 @@ public class GameManager {
 	public int getGeneration() {
 		return generation;
 	}
+	
+	// =========================
+	
+	
+	
+	
+	
 	
 }
