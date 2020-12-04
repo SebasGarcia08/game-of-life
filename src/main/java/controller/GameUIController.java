@@ -407,7 +407,7 @@ public class GameUIController implements Initializable {
 
 							if (!found && pathCells.size() < 2) {
 								pathCells.add(new Cell(x, y, true));
-
+								
 							}
 						}
 						
@@ -429,6 +429,11 @@ public class GameUIController implements Initializable {
 					}
 
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
+					
+					if(pathCells.size() == 2) {
+						shortestPath(pathCells.get(0), pathCells.get(1));
+					}
+					
 				}
 
 			}
@@ -554,7 +559,9 @@ public class GameUIController implements Initializable {
 				return false;
 			else if (grid[j][i]) // Obstacle found
 				return false;
-			// paint here
+
+			Color pathColor = new Color(249/250.0, 168/250.0, 37/250.0, 1.0);
+			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
 		}
 		return true;
 	}
