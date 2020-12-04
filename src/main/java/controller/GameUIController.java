@@ -126,8 +126,6 @@ public class GameUIController implements Initializable {
 	@FXML
 	void minimunPathActivated(ActionEvent event) {
 
-		System.out.println("TEST");
-
 		if (!minimumPath.isSelected()) {
 
 			for (Cell cell : pathCells) {
@@ -144,8 +142,6 @@ public class GameUIController implements Initializable {
 			}
 
 			pathCells = new ArrayList<Cell>();
-
-//			Color minPointsColor = new Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0);
 
 		}
 	}
@@ -394,37 +390,42 @@ public class GameUIController implements Initializable {
 						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
 						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
 
-						boolean found = false;
+						if(!grid[x][y]) {
+							
+							boolean found = false;
 
-						for (int i = 0; i < pathCells.size(); i++) {
+							for (int i = 0; i < pathCells.size(); i++) {
 
-							Cell curr = pathCells.get(i);
+								Cell curr = pathCells.get(i);
 
-							if (curr.getI() == x && curr.getJ() == y) {
-								pathCells.remove(i);
-								found = true;
-								break;
+								if (curr.getI() == x && curr.getJ() == y) {
+									pathCells.remove(i);
+									found = true;
+									break;
+								}
+							}
+
+							if (!found && pathCells.size() < 2) {
+								pathCells.add(new Cell(x, y, true));
+
 							}
 						}
-
-						if (!found && pathCells.size() < 2) {
-							pathCells.add(new Cell(x, y, true));
-
-						}
-
+						
 					} else {
 
 						int x = (int) (event.getX() / BOX_WIDTHS[currentBoxWidth]);
 						int y = (int) (event.getY() / BOX_WIDTHS[currentBoxWidth]);
+						
+						if(!existPathPoint(x, y)) {
+							grid[x][y] = grid[x][y] == true ? false : true;
 
-						grid[x][y] = grid[x][y] == true ? false : true;
-
-						if (grid[x][y] == true) {
-							gm.check(x, y);
-						} else {
-							gm.uncheck(x, y);
+							if (grid[x][y] == true) {
+								gm.check(x, y);
+							} else {
+								gm.uncheck(x, y);
+							}
 						}
-
+						
 					}
 
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
@@ -433,6 +434,24 @@ public class GameUIController implements Initializable {
 			}
 
 		});
+	}
+	
+	public boolean existPathPoint(int i, int j) {
+		
+		boolean found = false;
+		
+		for(int z=0; z<pathCells.size(); z++) {
+			
+			Cell curr = pathCells.get(z);
+			if(curr.getI() == i && curr.getJ() == j) {
+				found = true;
+				break;
+			}
+			
+		}
+		
+		return found;
+		
 	}
 
 	public void initSrollPaneDragEvent() {
