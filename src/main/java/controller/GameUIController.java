@@ -40,6 +40,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Cell;
 import model.GameManager;
+import model.ShortestPathFinder;
 
 public class GameUIController implements Initializable {
 
@@ -440,14 +441,14 @@ public class GameUIController implements Initializable {
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
 
 					if (pathCells.size() == 2) {
-						
+
 						new Thread() {
 							public void run() {
 								shortestPath(pathCells.get(0), pathCells.get(1));
 							}
-							
+
 						}.start();
-												
+
 					}
 
 				}
@@ -573,13 +574,15 @@ public class GameUIController implements Initializable {
 				j += 1;
 			if (!(0 <= i && i < grid[0].length && 0 <= j && j < grid.length))
 				return false;
-			else if (grid[i][j]) // Obstacle found
+			else if (grid[i][j]) {
+				System.out.println("Obstacle found");
 				return false;
+			}
 
 			System.out.println(i + " " + j);
 			Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
 			paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], pathColor);
-			
+
 		}
 		return true;
 	}
@@ -604,16 +607,17 @@ public class GameUIController implements Initializable {
 	}
 
 	public void shortestPath(Cell start, Cell end) {
-
-		Queue<String> queue = new LinkedList<>();
-		queue.add("");
-		String add = "";
-		while (!findEnd(add.toCharArray(), start, end)) {
-			add = queue.poll();
-			for (int i = 0; i < DIRECTIONS.length; i++) {
-				String put = add + DIRECTIONS[i];
-				if (isValid(put.toCharArray(), start)) {
-					queue.add(put);
+		if (Math.abs(start.getI() - end.getI()) < 10 && Math.abs(start.getJ() - end.getJ()) < 10) {
+			Queue<String> queue = new LinkedList<>();
+			queue.add("");
+			String add = "";
+			while (!findEnd(add.toCharArray(), start, end)) {
+				add = queue.poll();
+				for (int i = 0; i < DIRECTIONS.length; i++) {
+					String put = add + DIRECTIONS[i];
+					if (isValid(put.toCharArray(), start)) {
+						queue.add(put);
+					}
 				}
 			}
 		}
