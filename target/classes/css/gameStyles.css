@@ -10,6 +10,14 @@
     -fx-min-height: 30px;
 }
 
+.jfx-combo-box {
+	-fx-background-color:  WHITE;
+}
+
+.jfx-combo-box .label {
+	-fx-background-color:  WHITE;
+	-fx-text-fill: BLACK;
+}
 
 .controlIcon{
 	-fx-fill: #ffffff;

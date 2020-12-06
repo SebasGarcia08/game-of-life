@@ -21,7 +21,7 @@ public class Main extends Application {
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setFullScreen(true);
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("Great Bank Manager");
+			primaryStage.setTitle("The Game Of Life");
 			primaryStage.show();
 			scene.setFill(Color.TRANSPARENT);
 			

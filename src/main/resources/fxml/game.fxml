@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
@@ -71,7 +72,7 @@
                                                 </VBox>
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                    <children>
-                                                      <JFXButton buttonType="RAISED" contentDisplay="CENTER" onAction="#maximizeWindow" styleClass="rounded-btn">
+                                                      <JFXButton fx:id="maximizeBtn" buttonType="RAISED" contentDisplay="CENTER" onAction="#maximizeWindow" styleClass="rounded-btn">
                                                          <graphic>
                                                             <FontAwesomeIconView glyphName="ARROWS_ALT" size="20" />
                                                          </graphic>
@@ -79,7 +80,7 @@
                                                             <Font size="1.0" />
                                                          </font>
                                                       </JFXButton>
-                                                      <JFXButton buttonType="RAISED" contentDisplay="CENTER" onAction="#minimizeWindow" styleClass="rounded-btn">
+                                                      <JFXButton fx:id="minimizeBtn" buttonType="RAISED" contentDisplay="CENTER" onAction="#minimizeWindow" styleClass="rounded-btn">
                                                          <graphic>
                                                             <FontAwesomeIconView glyphName="ARROW_DOWN" size="20" />
                                                          </graphic>
@@ -97,7 +98,7 @@
                                                 </HBox>
                                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
                                                    <children>
-                                                      <JFXButton buttonType="RAISED" contentDisplay="CENTER" onAction="#exit" styleClass="rounded-btn">
+                                                      <JFXButton fx:id="exitBtn" buttonType="RAISED" contentDisplay="CENTER" onAction="#exit" styleClass="rounded-btn">
                                                          <HBox.margin>
                                                             <Insets right="10.0" top="10.0" />
                                                          </HBox.margin>
@@ -122,9 +123,9 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="74.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="81.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="68.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="10.0" prefWidth="244.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="190.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="184.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="10.0" prefWidth="218.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.0" minWidth="10.0" prefWidth="267.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="133.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="55.0" />
                                              </columnConstraints>
                                              <rowConstraints>
@@ -144,18 +145,23 @@
                                                 </HBox>
                                                 <VBox GridPane.columnIndex="5">
                                                    <children>
-                                                      <JFXToggleButton fx:id="minimumPath" onAction="#minimunPathActivated" prefHeight="0.0" prefWidth="166.0" text="Minimum path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
+                                                      <HBox alignment="BASELINE_CENTER" prefHeight="60.0" prefWidth="272.0">
+                                                         <children>
+                                                            <JFXToggleButton fx:id="minimumPath" onAction="#minimunPathActivated" prefHeight="60.0" prefWidth="166.0" text="Shortest path" textFill="WHITE" toggleColor="WHITE" toggleLineColor="WHITE" />
+                                                            <JFXComboBox id="algorithmComboBox" fx:id="algorithmComboBox" focusColor="WHITE" prefHeight="26.0" prefWidth="88.0" promptText="Algorithm" />
+                                                         </children>
+                                                      </HBox>
                                                    </children>
                                                 </VBox>
                                                 <HBox alignment="CENTER" prefHeight="52.0" prefWidth="258.0" GridPane.columnIndex="6">
                                                    <children>
-                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Generations: " wrappingWidth="87.80712890625" />
+                                                      <Text fx:id="generationsText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Generations: " wrappingWidth="87.80712890625" />
                                                       <Text fx:id="numGenerations" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.27099609375" />
                                                    </children>
                                                 </HBox>
                                                 <VBox alignment="CENTER" GridPane.columnIndex="1">
                                                    <children>
-                                                      <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#play">
+                                                      <JFXButton fx:id="playBtn" buttonType="RAISED" contentDisplay="RIGHT" onAction="#play">
                                                          <graphic>
                                                             <FontAwesomeIconView fx:id="PlayButton" glyphName="PLAY" size="45" styleClass="controlIcon" />
                                                          </graphic>
@@ -167,7 +173,7 @@
                                                 </VBox>
                                                 <VBox alignment="CENTER" GridPane.columnIndex="2">
                                                    <children>
-                                                      <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#reset">
+                                                      <JFXButton fx:id="resetCellsBtn" buttonType="RAISED" contentDisplay="RIGHT" onAction="#reset">
                                                          <graphic>
                                                             <FontAwesomeIconView glyphName="REPEAT" size="45" styleClass="controlIcon" />
                                                          </graphic>
@@ -179,7 +185,7 @@
                                                 </VBox>
                                                 <VBox alignment="CENTER" GridPane.columnIndex="3">
                                                    <children>
-                                                      <JFXButton buttonType="RAISED" contentDisplay="RIGHT" onAction="#step" text="Button">
+                                                      <JFXButton fx:id="stepBtn" buttonType="RAISED" contentDisplay="RIGHT" onAction="#step" text="Button">
                                                          <graphic>
                                                             <FontAwesomeIconView glyphName="FORWARD" size="45" styleClass="controlIcon" />
                                                          </graphic>

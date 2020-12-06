@@ -43,4 +43,19 @@ public class Cell {
 	public int[] getCoords() {
 		return this.coords;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other != null && other instanceof Cell) {
+			Cell otherC = (Cell) other;
+			return this.i == otherC.i && this.j == otherC.j;			
+		}
+		else 
+			return false;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + i + "," + j + "]"; 
+	}
 }
