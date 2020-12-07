@@ -103,10 +103,11 @@ public class GameUIController implements Initializable {
 	public static final int SPEED_INC = 1000;
 
 	private GameManager gm;
-	private int currentBoxWidth = 2;
+	private int currentBoxWidth = 1;
 	public static final int[] BOX_WIDTHS = { 15, 20, 30, 40, 50 };
 	private final String A_STAR_L1_TEXT  = "A* L1";
 	private final String A_STAR_L2_TEXT  = "A* L2";	
+	private final String DIJSKTRA_TEXT  = "Dijkstra";	
 	GraphicsContext gc;
 	boolean clickCooldownActive = false;
 	boolean[][] grid;
@@ -136,9 +137,10 @@ public class GameUIController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		configContainer.setVisible(false);
-		algorithmComboBox.getItems().add("BST");
+		algorithmComboBox.getItems().add("BFS");
 		algorithmComboBox.getItems().add(A_STAR_L1_TEXT);
 		algorithmComboBox.getItems().add(A_STAR_L2_TEXT);
+		algorithmComboBox.getItems().add(DIJSKTRA_TEXT);
 
 		exitBtn.setTooltip(new Tooltip("Exit"));
 		hideBtn.setTooltip(new Tooltip("Hide config pane"));
@@ -491,6 +493,9 @@ public class GameUIController implements Initializable {
 										break;
 									case A_STAR_L2_TEXT:
 										Astar.run(controller, pathCells.get(0), pathCells.get(1), DISTANCE.EUCLIDEAN);
+										break;
+									case DIJSKTRA_TEXT:
+										Astar.run(controller, pathCells.get(0), pathCells.get(1), DISTANCE.NONE);
 										break;
 									default:
 										System.out.println("invalid choice");

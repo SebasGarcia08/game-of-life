@@ -15,10 +15,10 @@ import controller.GameUIController;
 import javafx.scene.paint.Color;
 
 public class Astar {
-	
+
 	public static int[] directionI = { -1, 0, 0, 1 };
 	public static int[] directionJ = { 0, -1, 1, 0 };
-	
+
 	static class Triplet implements Comparable<Triplet> {
 		private double f_score;
 		private int count;
@@ -46,7 +46,12 @@ public class Astar {
 	}
 
 	public static boolean run(GameUIController controller, Cell start, Cell end, DISTANCE distance) {
-		BiFunction<int[], int[], Double> h = (distance == DISTANCE.MANHATTAN) ? Astar::manhattanDistance : Astar::euclideanDistance;
+		BiFunction<int[], int[], Double> h;
+		if (distance == DISTANCE.NONE) {
+			h = (p1,p2) -> 0.0;
+		} else {			
+			h = (distance == DISTANCE.MANHATTAN) ? Astar::L1 : Astar::L2;
+		}
 		int count = 0;
 		Color pathColor = new Color(249 / 250.0, 168 / 250.0, 37 / 250.0, 1.0);
 
@@ -95,7 +100,7 @@ public class Astar {
 
 				if (tempGScore < gScores[iNeighbour][jNeighbour]) {
 					Cell neighbour = new Cell(iNeighbour, jNeighbour, false);
-					if(neighbourIdxs[0] == end.getI() && neighbourIdxs[1] == end.getJ())
+					if (neighbourIdxs[0] == end.getI() && neighbourIdxs[1] == end.getJ())
 						cameFrom.put(end.getCoords(), currentIdxs);
 					else
 						cameFrom.put(neighbourIdxs, currentIdxs);
@@ -150,11 +155,11 @@ public class Astar {
 		return neighbours;
 	}
 
-	public static double euclideanDistance(int[] p1, int[] p2) {
-		return Math.sqrt( Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2) );
+	public static double L2(int[] p1, int[] p2) {
+		return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
 	}
-	
-	public static double manhattanDistance(int[] p1, int[] p2) {
+
+	public static double L1(int[] p1, int[] p2) {
 		return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
 	}
 

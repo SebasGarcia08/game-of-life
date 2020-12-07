@@ -2,5 +2,6 @@ package model;
 
 public enum DISTANCE {
 	MANHATTAN,
-	EUCLIDEAN
+	EUCLIDEAN,
+	NONE
 }
