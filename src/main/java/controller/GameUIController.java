@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXToggleButton;
 
@@ -26,6 +27,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -36,10 +38,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.Astar;
 import model.Cell;
+import model.DISTANCE;
 import model.GameManager;
 
 public class GameUIController implements Initializable {
+
+	@FXML
+	private JFXButton maximizeBtn;
+
+	@FXML
+	private JFXButton minimizeBtn;
+
+	@FXML
+	private JFXButton exitBtn;
+
+	@FXML
+	private JFXButton resetCellsBtn;
+
+	@FXML
+	private JFXButton stepBtn;
 
 	@FXML
 	private ScrollPane scrollPane;
@@ -47,6 +66,9 @@ public class GameUIController implements Initializable {
 	@FXML
 	private FontAwesomeIconView PlayButton;
 
+    @FXML
+    private Text generationsText;
+	
 	@FXML
 	private Canvas canvas;
 
@@ -74,13 +96,18 @@ public class GameUIController implements Initializable {
 	@FXML
 	private JFXToggleButton minimumPath;
 
+	@FXML
+	private JFXComboBox<String> algorithmComboBox;
+
 	public static final int SPEED_MIN = 100;
 	public static final int SPEED_INC = 1000;
 
 	private GameManager gm;
-	private int currentBoxWidth = 2;
+	private int currentBoxWidth = 1;
 	public static final int[] BOX_WIDTHS = { 15, 20, 30, 40, 50 };
-	public static final char[] DIRECTIONS = { 'L', 'R', 'U', 'D' };
+	private final String A_STAR_L1_TEXT  = "A* L1";
+	private final String A_STAR_L2_TEXT  = "A* L2";	
+	private final String DIJSKTRA_TEXT  = "Dijkstra";	
 	GraphicsContext gc;
 	boolean clickCooldownActive = false;
 	boolean[][] grid;
@@ -110,7 +137,18 @@ public class GameUIController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		configContainer.setVisible(false);
+		algorithmComboBox.getItems().add("BFS");
+		algorithmComboBox.getItems().add(A_STAR_L1_TEXT);
+		algorithmComboBox.getItems().add(A_STAR_L2_TEXT);
+		algorithmComboBox.getItems().add(DIJSKTRA_TEXT);
 
+		exitBtn.setTooltip(new Tooltip("Exit"));
+		hideBtn.setTooltip(new Tooltip("Hide config pane"));
+		maximizeBtn.setTooltip(new Tooltip("Maximize window"));
+		minimizeBtn.setTooltip(new Tooltip("Minimize window"));
+		resetCellsBtn.setTooltip(new Tooltip("Reset cells"));
+		showBtn.setTooltip(new Tooltip("Show config pane"));
+		stepBtn.setTooltip(new Tooltip("Advance a generation"));
 		initializeScrollPane();
 		initCanvasClickEvent();
 		initSpeedSliderListener();
@@ -147,6 +185,11 @@ public class GameUIController implements Initializable {
 
 	public void paintCell(int i, int j, GraphicsContext gc, double boxWidth, Color color) {
 
+		try {
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -385,6 +428,7 @@ public class GameUIController implements Initializable {
 	}
 
 	public void initCanvasClickEvent() {
+		GameUIController controller = this;
 		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -438,17 +482,28 @@ public class GameUIController implements Initializable {
 					drawCanvas(gc, grid, BOX_WIDTHS[currentBoxWidth]);
 
 					if (pathCells.size() == 2) {
-
-						new Thread() {
-							public void run() {
-								// shortestPath(pathCells.get(0), pathCells.get(1));
-								BFS(pathCells.get(0), pathCells.get(1));
+						new Thread(() -> {
+							if (algorithmComboBox.getValue() != null) {
+								switch (algorithmComboBox.getValue()) {
+									case "BST":
+										BFS(pathCells.get(0), pathCells.get(1));
+										break;
+									case A_STAR_L1_TEXT:
+										Astar.run(controller, pathCells.get(0), pathCells.get(1), DISTANCE.MANHATTAN);
+										break;
+									case A_STAR_L2_TEXT:
+										Astar.run(controller, pathCells.get(0), pathCells.get(1), DISTANCE.EUCLIDEAN);
+										break;
+									case DIJSKTRA_TEXT:
+										Astar.run(controller, pathCells.get(0), pathCells.get(1), DISTANCE.NONE);
+										break;
+									default:
+										System.out.println("invalid choice");
+										break;
+								}
 							}
-
-						}.start();
-
+						}).start();
 					}
-
 				}
 
 			}
@@ -657,6 +712,10 @@ public class GameUIController implements Initializable {
 
 	}
 
+	public void paintCell(int i, int j, Color color) {
+		paintCell(i, j, gc, BOX_WIDTHS[currentBoxWidth], color);
+	}
+
 	public boolean blocked(Cell cell) {
 		return grid[cell.getI()][cell.getJ()];
 	}
@@ -673,4 +732,7 @@ public class GameUIController implements Initializable {
 		return i * 200 + j;
 	}
 
+	public boolean[][] getGrid() {
+		return this.grid;
+	}
 }
