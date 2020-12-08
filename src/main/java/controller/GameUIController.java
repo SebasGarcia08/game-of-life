@@ -485,7 +485,7 @@ public class GameUIController implements Initializable {
 						new Thread(() -> {
 							if (algorithmComboBox.getValue() != null) {
 								switch (algorithmComboBox.getValue()) {
-									case "BST":
+									case "BFS":
 										BFS(pathCells.get(0), pathCells.get(1));
 										break;
 									case A_STAR_L1_TEXT:
