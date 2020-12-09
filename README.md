@@ -14,6 +14,10 @@ The initial pattern constitutes the seed of the system. The first generation is 
 
 ![Demop](demo.gif)
 
+# Video presentation
+
+Video [here](https://bit.ly/39RZnE8)
+
 # Documentation
 
 The detailed documentation can be found [here](https://docs.google.com/document/d/18sNvl-EX905nPFo6rOp-BpPIS403qZXTN5X4uRgFKOY/edit?usp=sharing)
